@@ -9,24 +9,24 @@ class Player
 
         this.audio  = this.getAudio()
 
-        this.buildEvent();
+        this.bindEvent();
 
         this.$context.find('.play').on('click',() =>
         {
-            this.getPlaying()
-                ? this.setPause()
-                : this.setPlay();
+            this.isPlaying()
+                ? this.pause()
+                : this.play();
         })
 
         this.$context.find('.bar').on('click',(event) =>
         {
-            let played_excerpt = this.calculatePlayerPlayedExcerpt(event);
+            let ruler_wight = this.calculatePlayerRulerWight(event);
 
-            this.audio.currentTime = (played_excerpt * this.audio.duration) / this.wightSlider;
+            this.audio.currentTime = (ruler_wight * this.audio.duration) / 100;
         })
     }
 
-    private buildEvent()
+    private bindEvent()
     {
         this.audio.onplay = () => {
             this.addActive();
@@ -37,16 +37,16 @@ class Player
         };
 
         this.audio.ontimeupdate = () => {
-            this.ruler = this.calculateAudioPlayedExcerpt();
+            this.ruler = this.calculateAudioRulerWight();
         };
     }
 
-    private calculatePlayerPlayedExcerpt(event : JQueryEventObject): number
+    private calculatePlayerRulerWight(event : JQueryEventObject): number
     {
         return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSlider ;
     }
 
-    private calculateAudioPlayedExcerpt() : number
+    private calculateAudioRulerWight() : number
     {
         return (this.audio.currentTime * 100) /this.audio.duration;
     }
@@ -61,19 +61,19 @@ class Player
         this.$context.find('.ruler').width(ruler + '%')
     }
 
-    private getPlaying() :boolean
+    private isPlaying() :boolean
     {
         return this.$context.hasClass('active');
     }
 
-    private setPause()
+    private pause()
     {
         this.audio.pause();
 
         this.removeActive();
     }
 
-    private setPlay()
+    private play()
     {
         this.audio.play();
 
