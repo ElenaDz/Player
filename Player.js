@@ -2,6 +2,7 @@ class Player {
     constructor($context) {
         this.$context = $context;
         this.audio = this.getAudio();
+        // fixme а ниже разве не bind Events идут в этом коде ? почему они не в этом методе Плохое имя функции
         this.bindEvent();
         this.$context.find('.play').on('click', () => {
             this.isPlaying()
@@ -24,6 +25,7 @@ class Player {
             this.wightRulerPct = this.getWightRulerPctAudio();
         };
     }
+    // fixme в имени функции wight_px в передается position_ruler_px, ерунда передавать нужно wight_px
     getWightRulerPctPlayerFromWightPx(position_ruler_px) {
         let wight_ruler_px = (position_ruler_px - this.$context.find('.slider').offset().left);
         return (wight_ruler_px * 100) / this.wightSliderPx;
@@ -37,21 +39,24 @@ class Player {
     set wightRulerPct(wight) {
         this.$context.find('.ruler').width(wight + '%');
     }
-    isPlaying() {
-        return this.$context.hasClass('playing');
-    }
     pause() {
         this.audio.pause();
     }
     play() {
         this.audio.play();
     }
+    // todo добавь публичные свойства currentTime и duration
+    // fixme замени эти 3 функции свойством playing с getterом и setterом
     addPlaying() {
         this.$context.addClass('playing');
     }
     removePlaying() {
         this.$context.removeClass('playing');
     }
+    isPlaying() {
+        return this.$context.hasClass('playing');
+    }
+    // fixme вызывается один раз, не нужно выносить в отдельную фукнцию
     getAudio() {
         return $('body').find('audio')[0];
     }
