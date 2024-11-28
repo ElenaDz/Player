@@ -9,8 +9,8 @@ class Player {
                 : this.play();
         });
         this.$context.find('.bar').on('click', (event) => {
-            let ruler_wight = this.calculatePlayerRulerWight(event);
-            this.audio.currentTime = (ruler_wight * this.audio.duration) / 100;
+            let wight_ruler = this.calculateWightRulerPlayer(event);
+            this.audio.currentTime = (wight_ruler * this.audio.duration) / 100;
         });
     }
     bindEvent() {
@@ -21,13 +21,13 @@ class Player {
             this.removeActive();
         };
         this.audio.ontimeupdate = () => {
-            this.ruler = this.calculateAudioRulerWight();
+            this.ruler = this.calculateWightRulerAudio();
         };
     }
-    calculatePlayerRulerWight(event) {
+    calculateWightRulerPlayer(event) {
         return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSlider;
     }
-    calculateAudioRulerWight() {
+    calculateWightRulerAudio() {
         return (this.audio.currentTime * 100) / this.audio.duration;
     }
     get wightSlider() {

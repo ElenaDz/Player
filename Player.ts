@@ -20,9 +20,9 @@ class Player
 
         this.$context.find('.bar').on('click',(event) =>
         {
-            let ruler_wight = this.calculatePlayerRulerWight(event);
+            let wight_ruler = this.calculateWightRulerPlayer(event);
 
-            this.audio.currentTime = (ruler_wight * this.audio.duration) / 100;
+            this.audio.currentTime = (wight_ruler * this.audio.duration) / 100;
         })
     }
 
@@ -37,16 +37,16 @@ class Player
         };
 
         this.audio.ontimeupdate = () => {
-            this.ruler = this.calculateAudioRulerWight();
+            this.ruler = this.calculateWightRulerAudio();
         };
     }
 
-    private calculatePlayerRulerWight(event : JQueryEventObject): number
+    private calculateWightRulerPlayer(event : JQueryEventObject): number
     {
         return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSlider ;
     }
 
-    private calculateAudioRulerWight() : number
+    private calculateWightRulerAudio() : number
     {
         return (this.audio.currentTime * 100) /this.audio.duration;
     }
