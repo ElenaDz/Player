@@ -20,9 +20,7 @@ class Player
 
         this.$context.find('.bar').on('click',(event) =>
         {
-            let wight_ruler = this.calculateWightRulerPlayer(event);
-
-            this.audio.currentTime = (wight_ruler * this.audio.duration) / 100;
+            this.audio.currentTime = (this.calculateWightRulerPlayer(event) * this.audio.duration) / 100;
         })
     }
 
@@ -37,7 +35,7 @@ class Player
         };
 
         this.audio.ontimeupdate = () => {
-            this.ruler = this.calculateWightRulerAudio();
+            this.wightRuler = this.calculateWightRulerAudio();
         };
     }
 
@@ -56,9 +54,9 @@ class Player
         return this.$context.find('.slider').width();
     }
 
-    private set ruler(ruler: number)
+    private set wightRuler(wight: number)
     {
-        this.$context.find('.ruler').width(ruler + '%')
+        this.$context.find('.ruler').width(wight + '%')
     }
 
     private isPlaying() :boolean
