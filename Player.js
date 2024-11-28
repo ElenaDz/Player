@@ -9,48 +9,46 @@ class Player {
                 : this.play();
         });
         this.$context.find('.bar').on('click', (event) => {
-            this.audio.currentTime = (this.calculateWightRulerPlayer(event) * this.audio.duration) / 100;
+            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(event) * this.audio.duration) / 100;
         });
     }
     bindEvent() {
         this.audio.onplay = () => {
-            this.addActive();
+            this.addPlaying();
         };
         this.audio.onpause = () => {
-            this.removeActive();
+            this.removePlaying();
         };
         this.audio.ontimeupdate = () => {
-            this.wightRuler = this.calculateWightRulerAudio();
+            this.wightRulerPct = this.getWightRulerPctAudio();
         };
     }
-    calculateWightRulerPlayer(event) {
-        return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSlider;
+    getWightRulerPctPlayerFromWightPx(event) {
+        return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSliderPx;
     }
-    calculateWightRulerAudio() {
+    getWightRulerPctAudio() {
         return (this.audio.currentTime * 100) / this.audio.duration;
     }
-    get wightSlider() {
+    get wightSliderPx() {
         return this.$context.find('.slider').width();
     }
-    set wightRuler(wight) {
+    set wightRulerPct(wight) {
         this.$context.find('.ruler').width(wight + '%');
     }
     isPlaying() {
-        return this.$context.hasClass('active');
+        return this.$context.hasClass('playing');
     }
     pause() {
         this.audio.pause();
-        this.removeActive();
     }
     play() {
         this.audio.play();
-        this.addActive();
     }
-    addActive() {
-        this.$context.addClass('active');
+    addPlaying() {
+        this.$context.addClass('playing');
     }
-    removeActive() {
-        this.$context.removeClass('active');
+    removePlaying() {
+        this.$context.removeClass('playing');
     }
     getAudio() {
         return $('body').find('audio')[0];

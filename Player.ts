@@ -1,7 +1,7 @@
 class Player
 {
     private $context: JQuery;
-    private audio: HTMLAudioElement
+    public audio: HTMLAudioElement
 
     constructor($context: JQuery)
     {
@@ -20,72 +20,68 @@ class Player
 
         this.$context.find('.bar').on('click',(event) =>
         {
-            this.audio.currentTime = (this.calculateWightRulerPlayer(event) * this.audio.duration) / 100;
+            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(event) * this.audio.duration) / 100;
         })
     }
 
     private bindEvent()
     {
         this.audio.onplay = () => {
-            this.addActive();
+            this.addPlaying();
         };
 
         this.audio.onpause = () => {
-            this.removeActive();
+            this.removePlaying();
         };
 
         this.audio.ontimeupdate = () => {
-            this.wightRuler = this.calculateWightRulerAudio();
+            this.wightRulerPct = this.getWightRulerPctAudio();
         };
     }
 
-    private calculateWightRulerPlayer(event : JQueryEventObject): number
+    private getWightRulerPctPlayerFromWightPx(event : JQueryEventObject): number
     {
-        return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSlider ;
+        return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSliderPx ;
     }
 
-    private calculateWightRulerAudio() : number
+    private getWightRulerPctAudio() : number
     {
         return (this.audio.currentTime * 100) /this.audio.duration;
     }
 
-    private get wightSlider() :number
+    private get wightSliderPx() :number
     {
         return this.$context.find('.slider').width();
     }
 
-    private set wightRuler(wight: number)
+    private set wightRulerPct(wight: number)
     {
         this.$context.find('.ruler').width(wight + '%')
     }
 
     private isPlaying() :boolean
     {
-        return this.$context.hasClass('active');
+        return this.$context.hasClass('playing');
     }
 
-    private pause()
+    public pause()
     {
         this.audio.pause();
-
-        this.removeActive();
     }
 
-    private play()
+    public play()
     {
         this.audio.play();
-
-        this.addActive();
     }
 
-    private addActive()
+    private addPlaying()
     {
-        this.$context.addClass('active');
+        this.$context.addClass('playing');
     }
 
-    private removeActive()
+    private removePlaying()
     {
-        this.$context.removeClass('active');
+        this.$context.removeClass('playing');
     }
 
     private getAudio():HTMLAudioElement
