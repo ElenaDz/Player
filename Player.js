@@ -9,7 +9,8 @@ class Player {
                 : this.play();
         });
         this.$context.find('.bar').on('click', (event) => {
-            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(event) * this.audio.duration) / 100;
+            let position_ruler_px = event.pageX;
+            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(position_ruler_px) * this.audio.duration) / 100;
         });
     }
     bindEvent() {
@@ -23,8 +24,9 @@ class Player {
             this.wightRulerPct = this.getWightRulerPctAudio();
         };
     }
-    getWightRulerPctPlayerFromWightPx(event) {
-        return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSliderPx;
+    getWightRulerPctPlayerFromWightPx(position_ruler_px) {
+        let wight_ruler_px = (position_ruler_px - this.$context.find('.slider').offset().left);
+        return (wight_ruler_px * 100) / this.wightSliderPx;
     }
     getWightRulerPctAudio() {
         return (this.audio.currentTime * 100) / this.audio.duration;

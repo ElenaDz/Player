@@ -20,7 +20,9 @@ class Player
 
         this.$context.find('.bar').on('click',(event) =>
         {
-            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(event) * this.audio.duration) / 100;
+            let position_ruler_px :number = event.pageX;
+
+            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(position_ruler_px) * this.audio.duration) / 100;
         })
     }
 
@@ -39,9 +41,11 @@ class Player
         };
     }
 
-    private getWightRulerPctPlayerFromWightPx(event : JQueryEventObject): number
+    private getWightRulerPctPlayerFromWightPx(position_ruler_px :number): number
     {
-        return ((event.pageX - this.$context.find('.slider').offset().left) * 100) / this.wightSliderPx ;
+        let wight_ruler_px :number = (position_ruler_px - this.$context.find('.slider').offset().left);
+
+        return ( wight_ruler_px * 100) / this.wightSliderPx ;
     }
 
     private getWightRulerPctAudio() : number
