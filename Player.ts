@@ -1,6 +1,7 @@
 class Player
 {
     private $context: JQuery;
+    // fixme почему public? private
     public audio: HTMLAudioElement
 
     constructor($context: JQuery)
@@ -9,14 +10,14 @@ class Player
 
         this.audio = <HTMLAudioElement>$('body').find('audio')[0];
 
-        // fixme а ниже разве не bind Events идут в этом коде ? почему они не в этом методе Плохое имя функции ok
-
         this.$context.find('.play').on('click',() =>
         {
-            if (!this.playing) {
+            if ( ! this.playing) {
+                // fixme нельзя напрямую менять dom других элементов Для этого у нас есть объекты, свойства, методы Переделай
                 $('body').find('.b_player').removeClass('playing');
             }
 
+            // fixme так писать нельзя Такое допустимо если нужно вызвать метод, а тут присвоение идет, менять на if else
             this.isCurrentTrack()
                 ? this.updateAction()
                 : this.audio.src = this.src;
@@ -34,7 +35,7 @@ class Player
 
     private isCurrentTrack() :boolean
     {
-        let src_audio = decodeURI(this.audio.src).toLowerCase();
+        let src_audio  = decodeURI(this.audio.src).toLowerCase();
         let src_player = decodeURI(this.src).toLowerCase();
 
         return src_audio.includes(src_player);
@@ -68,7 +69,6 @@ class Player
         }
     }
 
-    // fixme в имени функции wight_px в передается position_ruler_px, ерунда передавать нужно wight_px ok
     private getWightRulerPctPlayerFromWightPx(wight_px :number): number
     {
         let wight_ruler_px:number = (wight_px - this.$context.find('.slider').offset().left);
@@ -111,7 +111,6 @@ class Player
         return this.$context.data('src');
     }
 
-    // todo добавь публичные свойства currentTime и duration ok
     public set currentTime(current_time: number)
     {
         this.$context.find('.current_time').text(this.convertSecToMin(current_time));
@@ -122,6 +121,7 @@ class Player
          this.$context.find('.duration').text(this.convertSecToMin(duration));
     }
 
+    // fixme метод может быть static
     private convertSecToMin(sec = 0)
     {
         let min = Math.floor(Math.trunc(sec / 60));
@@ -131,14 +131,14 @@ class Player
         return min + ':' +  this.getSec(sec);
     }
 
-    private  getSec(sec :number)
+    // fixme не надо выносить в функцию, используется один раз
+    private getSec(sec :number)
     {
         if (sec < 10) return '0' + sec;
 
         return sec;
     }
 
-    // fixme замени эти 3 функции свойством playing с getterом и setterом ok
     private set playing(playing)
     {
         playing
@@ -151,7 +151,6 @@ class Player
         return this.$context.hasClass('playing');
     }
 
-    // fixme вызывается один раз, не нужно выносить в отдельную фукнцию ок
     public static create($context = $('.b_player')): Player[]
     {
         let $players = $context;

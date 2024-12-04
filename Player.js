@@ -2,11 +2,12 @@ class Player {
     constructor($context) {
         this.$context = $context;
         this.audio = $('body').find('audio')[0];
-        // fixme а ниже разве не bind Events идут в этом коде ? почему они не в этом методе Плохое имя функции ok
         this.$context.find('.play').on('click', () => {
             if (!this.playing) {
+                // fixme нельзя напрямую менять dom других элементов Для этого у нас есть объекты, свойства, методы Переделай
                 $('body').find('.b_player').removeClass('playing');
             }
+            // fixme так писать нельзя Такое допустимо если нужно вызвать метод, а тут присвоение идет, менять на if else
             this.isCurrentTrack()
                 ? this.updateAction()
                 : this.audio.src = this.src;
@@ -43,7 +44,6 @@ class Player {
             this.duration = this.audio.duration;
         };
     }
-    // fixme в имени функции wight_px в передается position_ruler_px, ерунда передавать нужно wight_px ok
     getWightRulerPctPlayerFromWightPx(wight_px) {
         let wight_ruler_px = (wight_px - this.$context.find('.slider').offset().left);
         return (wight_ruler_px * 100) / this.wightSliderPx;
@@ -69,24 +69,24 @@ class Player {
     get src() {
         return this.$context.data('src');
     }
-    // todo добавь публичные свойства currentTime и duration ok
     set currentTime(current_time) {
         this.$context.find('.current_time').text(this.convertSecToMin(current_time));
     }
     set duration(duration) {
         this.$context.find('.duration').text(this.convertSecToMin(duration));
     }
+    // fixme метод может быть static
     convertSecToMin(sec = 0) {
         let min = Math.floor(Math.trunc(sec / 60));
         sec = Math.floor(sec % 60);
         return min + ':' + this.getSec(sec);
     }
+    // fixme не надо выносить в функцию, используется один раз
     getSec(sec) {
         if (sec < 10)
             return '0' + sec;
         return sec;
     }
-    // fixme замени эти 3 функции свойством playing с getterом и setterом ok
     set playing(playing) {
         playing
             ? this.$context.removeClass('playing')
@@ -95,7 +95,6 @@ class Player {
     get playing() {
         return this.$context.hasClass('playing');
     }
-    // fixme вызывается один раз, не нужно выносить в отдельную фукнцию ок
     static create($context = $('.b_player')) {
         let $players = $context;
         let players = [];
