@@ -1,33 +1,51 @@
 class Player {
     constructor($context) {
         this.$context = $context;
-        this.audio = this.getAudio();
-        // fixme а ниже разве не bind Events идут в этом коде ? почему они не в этом методе Плохое имя функции
-        this.bindEvent();
+        this.audio = $('body').find('audio')[0];
+        // fixme а ниже разве не bind Events идут в этом коде ? почему они не в этом методе Плохое имя функции ok
         this.$context.find('.play').on('click', () => {
-            this.isPlaying()
-                ? this.pause()
-                : this.play();
+            if (!this.playing) {
+                $('body').find('.b_player').removeClass('playing');
+            }
+            this.isCurrentTrack()
+                ? this.updateAction()
+                : this.audio.src = this.src;
+            this.initEventsAudio();
         });
         this.$context.find('.bar').on('click', (event) => {
-            let position_ruler_px = event.pageX;
-            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(position_ruler_px) * this.audio.duration) / 100;
+            let wight_px = event.pageX;
+            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(wight_px) * this.audio.duration) / 100;
         });
     }
-    bindEvent() {
+    isCurrentTrack() {
+        let src_audio = decodeURI(this.audio.src).toLowerCase();
+        let src_player = decodeURI(this.src).toLowerCase();
+        return src_audio.includes(src_player);
+    }
+    updateAction() {
+        this.playing
+            ? this.pause()
+            : this.play();
+    }
+    initEventsAudio() {
         this.audio.onplay = () => {
-            this.addPlaying();
+            this.playing = this.playing;
         };
         this.audio.onpause = () => {
-            this.removePlaying();
+            this.playing = this.playing;
         };
         this.audio.ontimeupdate = () => {
             this.wightRulerPct = this.getWightRulerPctAudio();
+            this.currentTime = this.audio.currentTime;
+        };
+        this.audio.onloadedmetadata = () => {
+            this.updateAction();
+            this.duration = this.audio.duration;
         };
     }
-    // fixme в имени функции wight_px в передается position_ruler_px, ерунда передавать нужно wight_px
-    getWightRulerPctPlayerFromWightPx(position_ruler_px) {
-        let wight_ruler_px = (position_ruler_px - this.$context.find('.slider').offset().left);
+    // fixme в имени функции wight_px в передается position_ruler_px, ерунда передавать нужно wight_px ok
+    getWightRulerPctPlayerFromWightPx(wight_px) {
+        let wight_ruler_px = (wight_px - this.$context.find('.slider').offset().left);
         return (wight_ruler_px * 100) / this.wightSliderPx;
     }
     getWightRulerPctAudio() {
@@ -45,22 +63,46 @@ class Player {
     play() {
         this.audio.play();
     }
-    // todo добавь публичные свойства currentTime и duration
-    // fixme замени эти 3 функции свойством playing с getterом и setterом
-    addPlaying() {
-        this.$context.addClass('playing');
+    set src(src) {
+        this.$context.data('src', src);
     }
-    removePlaying() {
-        this.$context.removeClass('playing');
+    get src() {
+        return this.$context.data('src');
     }
-    isPlaying() {
+    // todo добавь публичные свойства currentTime и duration ok
+    set currentTime(current_time) {
+        this.$context.find('.current_time').text(this.convertSecToMin(current_time));
+    }
+    set duration(duration) {
+        this.$context.find('.duration').text(this.convertSecToMin(duration));
+    }
+    convertSecToMin(sec = 0) {
+        let min = Math.floor(Math.trunc(sec / 60));
+        sec = Math.floor(sec % 60);
+        return min + ':' + this.getSec(sec);
+    }
+    getSec(sec) {
+        if (sec < 10)
+            return '0' + sec;
+        return sec;
+    }
+    // fixme замени эти 3 функции свойством playing с getterом и setterом ok
+    set playing(playing) {
+        playing
+            ? this.$context.removeClass('playing')
+            : this.$context.addClass('playing');
+    }
+    get playing() {
         return this.$context.hasClass('playing');
     }
-    // fixme вызывается один раз, не нужно выносить в отдельную фукнцию
-    getAudio() {
-        return $('body').find('audio')[0];
-    }
-    static create($context = $('.player')) {
-        return new Player($context);
+    // fixme вызывается один раз, не нужно выносить в отдельную фукнцию ок
+    static create($context = $('.b_player')) {
+        let $players = $context;
+        let players = [];
+        $players.each((index, element) => {
+            let player = $(element);
+            players.push(new Player(player));
+        });
+        return players;
     }
 }

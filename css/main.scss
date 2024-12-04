@@ -15,7 +15,7 @@ body {
   }
 }
 
-.player {
+.b_player {
   width: 300px;
   height: 54px;
   margin-top: 20px;
@@ -25,12 +25,20 @@ body {
   align-items: center;
   justify-content: center;
 
+  .time {
+    display: flex;
+
+    span {
+      margin: 0 10px;
+    }
+  }
   .play {
     width: 30px;
     height: 30px;
     border: none;
     border-radius: 50%;
     cursor: pointer;
+    margin-right: 10px;
 
     &:hover, &:focus {
       background-color: #bfc1c3;
@@ -43,7 +51,7 @@ body {
 
   .bar {
     width: 90px;
-    margin-left: 15px;
+    margin-left: 10px;
     position: relative;
     cursor: pointer;
 

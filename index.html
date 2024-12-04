@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- fixme добавь в git файл main.css -->
+    <!-- fixme добавь в git файл main.css ok -->
     <link rel="stylesheet" href="css/main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,18 +15,39 @@
 <body>
 
     <div>
-        <audio id="audio_player" src="5УТРА%20-%20Ромашки.mp3"
-               type="audio/mp3" controls="controls"  preload="metadata" >
+        <audio id="audio_player" type="audio/mp3" controls="controls"  preload="metadata" >
         </audio>
     </div>
 
-    <!-- todo добавь второй плеер в котором будет другая песня, при этом audio должен остаться один на странице -->
-    <div class="player">
+    <!-- todo добавь второй плеер в котором будет другая песня, при этом audio должен остаться один на странице ok-->
+    <div class="b_player">
         <div>
             <button class="play go pause icon"></button>
         </div>
 
-        <!-- todo добавь здесь текущую позицию и длину песни как в audio -->
+        <!-- todo добавь здесь текущую позицию и длину песни как в audio ok-->
+        <div class="time">
+            <div class="current_time"></div>
+            <span>/</span>
+            <div class="duration"></div>
+        </div>
+
+        <div class="bar">
+            <div class="slider"></div>
+            <div class="ruler"></div>
+        </div>
+    </div>
+
+    <div class="b_player">
+        <div>
+            <button class="play go pause icon"></button>
+        </div>
+
+        <div class="time">
+            <div class="current_time"></div>
+            <span>/</span>
+            <div class="duration"></div>
+        </div>
 
         <div class="bar">
             <div class="slider"></div>
@@ -42,9 +63,11 @@
 <script src="Player.js"></script>
     <script type="text/javascript">
         $(function() {
-            let player = Player.create();
+            let players = Player.create();
 
-            console.log(player);
+            players[0].src = '5УТРА%20-%20Ромашки.mp3'
+            players[1].src = 'Niletto - Счастливым.mp3'
+
         });
     </script>
 </body>
