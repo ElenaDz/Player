@@ -4,19 +4,27 @@ class Player {
         this.audio = $('body').find('audio')[0];
         this.$context.find('.play').on('click', () => {
             if (!this.playing) {
-                // fixme нельзя напрямую менять dom других элементов Для этого у нас есть объекты, свойства, методы Переделай
-                $('body').find('.b_player').removeClass('playing');
+                // fixme нельзя напрямую менять dom других элементов Для этого у нас есть объекты, свойства, методы Переделай ok
+                this.removePlaying();
             }
-            // fixme так писать нельзя Такое допустимо если нужно вызвать метод, а тут присвоение идет, менять на if else
-            this.isCurrentTrack()
-                ? this.updateAction()
-                : this.audio.src = this.src;
+            // fixme так писать нельзя Такое допустимо если нужно вызвать метод, а тут присвоение идет, менять на if else ok
+            if (this.isCurrentTrack()) {
+                this.updateAction();
+            }
+            else {
+                this.audio.src = this.src;
+            }
             this.initEventsAudio();
         });
         this.$context.find('.bar').on('click', (event) => {
-            let wight_px = event.pageX;
-            this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(wight_px) * this.audio.duration) / 100;
+            if (this.isCurrentTrack()) {
+                let wight_px = event.pageX;
+                this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(wight_px) * this.audio.duration) / 100;
+            }
         });
+    }
+    removePlaying() {
+        this.$context.siblings().removeClass('playing');
     }
     isCurrentTrack() {
         let src_audio = decodeURI(this.audio.src).toLowerCase();
@@ -70,23 +78,23 @@ class Player {
         return this.$context.data('src');
     }
     set currentTime(current_time) {
-        this.$context.find('.current_time').text(this.convertSecToMin(current_time));
+        this.$context.find('.current_time').text(Player.convertSecToMin(current_time));
     }
     set duration(duration) {
-        this.$context.find('.duration').text(this.convertSecToMin(duration));
+        this.$context.find('.duration').text('/ ' + Player.convertSecToMin(duration));
     }
-    // fixme метод может быть static
-    convertSecToMin(sec = 0) {
+    // fixme метод может быть static ok
+    static convertSecToMin(sec = 0) {
         let min = Math.floor(Math.trunc(sec / 60));
         sec = Math.floor(sec % 60);
-        return min + ':' + this.getSec(sec);
+        if (sec < 10) {
+            return min + ':0' + sec;
+        }
+        else {
+            return min + ':' + sec;
+        }
     }
-    // fixme не надо выносить в функцию, используется один раз
-    getSec(sec) {
-        if (sec < 10)
-            return '0' + sec;
-        return sec;
-    }
+    // fixme не надо выносить в функцию, используется один раз ok
     set playing(playing) {
         playing
             ? this.$context.removeClass('playing')

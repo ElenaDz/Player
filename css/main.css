@@ -25,9 +25,11 @@ body {
 }
 .b_player .time {
   display: flex;
+  justify-content: center;
+  width: 80px;
 }
-.b_player .time span {
-  margin: 0 10px;
+.b_player .time .current_time {
+  margin-right: 4px;
 }
 .b_player .play {
   width: 30px;
@@ -48,6 +50,7 @@ body {
   margin-left: 10px;
   position: relative;
   cursor: pointer;
+  padding: 5px 0 10px;
 }
 .b_player .bar .slider {
   position: absolute;
