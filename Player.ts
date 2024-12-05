@@ -70,12 +70,12 @@ class Player
 
         this.audio.ontimeupdate = () => {
             this.wightRulerPct = this.getWightRulerPctAudio();
-            this.currentTime = this.audio.currentTime
+            this.currentTimeText = this.audio.currentTime
         };
 
         this.audio.onloadedmetadata = () => {
             this.updateAction();
-            this.duration = this.audio.duration;
+            this.durationText = this.audio.duration;
         }
     }
 
@@ -121,14 +121,19 @@ class Player
         return this.$context.data('src');
     }
 
-    public set currentTime(current_time: number)
+    private set currentTimeText(current_time: number)
     {
         this.$context.find('.current_time').text(Player.convertSecToMin(current_time));
     }
 
-    public set duration(duration :number)
+    private set durationText(duration :number)
     {
          this.$context.find('.duration').text('/ ' + Player.convertSecToMin(duration));
+    }
+
+    public set currentTime(current_time: number)
+    {
+        this.audio.currentTime = current_time;
     }
 
     // fixme метод может быть static ok

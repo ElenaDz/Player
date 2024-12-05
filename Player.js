@@ -45,11 +45,11 @@ class Player {
         };
         this.audio.ontimeupdate = () => {
             this.wightRulerPct = this.getWightRulerPctAudio();
-            this.currentTime = this.audio.currentTime;
+            this.currentTimeText = this.audio.currentTime;
         };
         this.audio.onloadedmetadata = () => {
             this.updateAction();
-            this.duration = this.audio.duration;
+            this.durationText = this.audio.duration;
         };
     }
     getWightRulerPctPlayerFromWightPx(wight_px) {
@@ -77,11 +77,14 @@ class Player {
     get src() {
         return this.$context.data('src');
     }
-    set currentTime(current_time) {
+    set currentTimeText(current_time) {
         this.$context.find('.current_time').text(Player.convertSecToMin(current_time));
     }
-    set duration(duration) {
+    set durationText(duration) {
         this.$context.find('.duration').text('/ ' + Player.convertSecToMin(duration));
+    }
+    set currentTime(current_time) {
+        this.audio.currentTime = current_time;
     }
     // fixme метод может быть static ok
     static convertSecToMin(sec = 0) {
