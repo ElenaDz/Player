@@ -4,10 +4,13 @@ class Player {
         this.audio = $('body').find('audio')[0];
         this.$context.find('.play').on('click', () => {
             if (!this.playing) {
-                // fixme нельзя напрямую менять dom других элементов Для этого у нас есть объекты, свойства, методы Переделай ok
+                // fixme ты ни чего не исправила все так же меняет dom не этого плеера а соседнего, так нельзя
+                //  нужно получить все объекты плееров на странице и задать их свойство playing, выносить в отдельную функцию не нужно
+                //  ты видимо не понимаешь что ты здесь хочешь сделать поэтому делаешь не правильно, ты хочешь остановить все
+                //  остальные плееры, надеюсь теперь сделаешь правильно, тебе не кажется ерундой менять свойство playing когда тебе
+                //  нужно остановить плеер, мне кажется, я бы выбрать для этого метод pause или stop
                 this.removePlaying();
             }
-            // fixme так писать нельзя Такое допустимо если нужно вызвать метод, а тут присвоение идет, менять на if else ok
             if (this.isCurrentTrack()) {
                 this.updateAction();
             }
@@ -83,10 +86,12 @@ class Player {
     set durationText(duration) {
         this.$context.find('.duration').text('/ ' + Player.convertSecToMin(duration));
     }
+    // todo добавить метод get
     set currentTime(current_time) {
         this.audio.currentTime = current_time;
     }
-    // fixme метод может быть static ok
+    // todo добавить метод get duration
+    // fixme переименуй в formatTime
     static convertSecToMin(sec = 0) {
         let min = Math.floor(Math.trunc(sec / 60));
         sec = Math.floor(sec % 60);
@@ -97,7 +102,6 @@ class Player {
             return min + ':' + sec;
         }
     }
-    // fixme не надо выносить в функцию, используется один раз ok
     set playing(playing) {
         playing
             ? this.$context.removeClass('playing')
