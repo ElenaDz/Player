@@ -123,12 +123,12 @@ class Player
         return this.$context.data('src');
     }
 
-    public set currentTimeText(current_time: number)
+    private set currentTimeText(current_time: number)
     {
         this.$context.find('.current_time').text(Player.convertSecToMin(current_time));
     }
 
-    public set durationText(duration :number)
+    private set durationText(duration :number)
     {
          this.$context.find('.duration').text('/ ' + Player.convertSecToMin(duration));
     }
