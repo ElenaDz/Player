@@ -13,8 +13,33 @@ body {
   background-image: url("/icon/pause.png") !important;
 }
 
+.pause {
+  background-image: url("/icon/pause.png");
+}
+
+.go {
+  background-image: url("/icon/play.png");
+}
+
+.slash .current_time::after {
+  margin: 0 5px;
+  content: "/";
+}
+
+.play {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  margin: 0 10px;
+}
+.play:hover, .play:focus {
+  background-color: #bfc1c3;
+}
+
 .b_player {
-  width: 300px;
+  width: 350px;
   height: 54px;
   margin-top: 20px;
   border: 1px solid #bfc1c3;
@@ -23,31 +48,43 @@ body {
   align-items: center;
   justify-content: center;
 }
-.b_player .time {
-  display: flex;
-  justify-content: center;
-  width: 80px;
-}
-.b_player .time .current_time {
-  margin-right: 4px;
-}
-.b_player .play {
-  width: 30px;
-  height: 30px;
+.b_player .previous, .b_player .next {
+  width: 25px;
+  height: 25px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  margin-right: 10px;
+  background-image: url("/icon/next.png");
 }
-.b_player .play:hover, .b_player .play:focus {
+.b_player .previous:hover, .b_player .next:hover {
   background-color: #bfc1c3;
 }
-.b_player .go {
-  background-image: url("/icon/play.png");
+.b_player .previous:disabled, .b_player .next:disabled {
+  opacity: 0.5;
+  cursor: default;
+  background-color: white;
+}
+.b_player .previous {
+  transform: scale(-1, 1);
+}
+.b_player .time {
+  display: flex;
+  justify-content: center;
+  width: 90px;
+  margin-left: 10px;
+}
+.b_player .time .current_time {
+  width: 48px;
+  display: flex;
+  justify-content: end;
+}
+.b_player .time .duration {
+  width: 42px;
+  display: flex;
+  justify-content: start;
 }
 .b_player .bar {
   width: 90px;
-  margin-left: 10px;
   position: relative;
   cursor: pointer;
   padding: 5px 0 10px;
@@ -64,6 +101,25 @@ body {
   height: 5px;
   background-color: dimgray;
   border-radius: 2px;
+}
+
+.b_list_mini_players {
+  padding: unset;
+  list-style-type: none;
+}
+.b_list_mini_players .b_mini_player {
+  width: 350px;
+  height: 54px;
+  margin-top: 20px;
+  border: 1px solid #bfc1c3;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: unset;
+}
+.b_list_mini_players .b_mini_player .play {
+  margin-left: 30px;
 }
 
 /*# sourceMappingURL=main.css.map */

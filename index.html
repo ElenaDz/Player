@@ -19,30 +19,20 @@
 
     <div class="b_player">
         <div>
-            <button class="play go pause icon"></button>
+            <button class="previous icon"></button>
         </div>
-
-        <!-- todo ты не исправила проблему с прыганьем блоков во время загрузки, все размеры должны быть фиксированные
-              чтобы избежать прыганья когда блоки еще пустые -->
-        <div class="time">
-            <div class="current_time"></div>
-            <!-- fixme ты физически добавила / сюда, так нельзя / не является длинной, я просил добавить через css :afterr или :before -->
-            <div class="duration"></div>
-        </div>
-
-        <div class="bar">
-            <div class="slider"></div>
-            <div class="ruler"></div>
-        </div>
-    </div>
-
-    <div class="b_player">
         <div>
             <button class="play go pause icon"></button>
         </div>
+        <div>
+            <button class="next icon"></button>
+        </div>
 
+        <!-- todo ты не исправила проблему с прыганьем блоков во время загрузки, все размеры должны быть фиксированные
+              чтобы избежать прыганья когда блоки еще пустые ok-->
         <div class="time">
             <div class="current_time"></div>
+            <!-- fixme ты физически добавила / сюда, так нельзя / не является длинной, я просил добавить через css :afterr или :before ok -->
             <div class="duration"></div>
         </div>
 
@@ -51,21 +41,33 @@
             <div class="ruler"></div>
         </div>
     </div>
+
+   <ul class="b_list_mini_players">
+       <li class="b_mini_player" data-src='5УТРА%20-%20Ромашки.mp3'>
+           <button class="play go pause icon"></button>
+           <span class="name_song">5УТРА - Ромашки</span>
+       </li>
+       <li class="b_mini_player" data-src='Niletto - Счастливым.mp3'>
+           <button class="play go pause icon"></button>
+           <span class="name_song">Niletto - Счастливым</span>
+       </li>
+       <li class="b_mini_player" data-src='А-Студио - Так же как все.mp3'>
+           <button class="play go pause icon"></button>
+           <span class="name_song">А-Студио - Так же как все</span>
+       </li>
+   </ul>
 
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="MiniPlayers.js"></script>
 <script src="Player.js"></script>
     <script type="text/javascript">
         $(function() {
             let players = Player.create();
-
-            players[0].src = '5УТРА%20-%20Ромашки.mp3';
-            players[1].src = 'Niletto - Счастливым.mp3';
-
-            console.log(players);
+            // let mini_players = MiniPlayers.create();
 
         });
     </script>

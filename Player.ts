@@ -1,7 +1,11 @@
 class Player
 {
-    private $context: JQuery;
-    private audio: HTMLAudioElement
+    static readonly EVENT_UPDATE_ACTION = 'Player.EVENT_UPDATE_ACTION';
+
+    public $context: JQuery;
+    private audio: HTMLAudioElement;
+    private $next: JQuery;
+    private $previous: JQuery;
 
     constructor($context: JQuery)
     {
@@ -9,48 +13,57 @@ class Player
 
         this.audio = <HTMLAudioElement>$('body').find('audio')[0];
 
+        // @ts-ignore
+        if (this.$context[0].Player) return;
+
+        // @ts-ignore
+        this.$context[0].Player = this;
+
+        this.$next = this.$context.find('.next');
+        this.$previous = this.$context.find('.previous');
+
+        // Метод нужен , чтобы после загрузки страницы можно было сразу воспользовать плеером, не выбирая сам песню
+        this.initFirstSong();
+
+        this.bindEventsAction();
+    }
+
+    private bindEventsAction()
+    {
+        this.$next.on('click',() =>
+        {
+            this.playNextSong();
+        });
+
+        this.$previous.on('click',() =>
+        {
+            this.playPreviousSong();
+        });
+
+        this.initEventsAudio();
+
         this.$context.find('.play').on('click',() =>
         {
-            if ( ! this.playing) {
-                // fixme ты ни чего не исправила все так же меняет dom не этого плеера а соседнего, так нельзя
-                //  нужно получить все объекты плееров на странице и задать их свойство playing, выносить в отдельную функцию не нужно
-                this.removePlaying();
-            }
-
-            if (this.isCurrentTrack()) {
-                this.updateAction();
-
-            } else {
-                this.audio.src = this.src;
-            }
-
-            this.initEventsAudio();
-        })
+            this.updateAction();
+        });
 
         this.$context.find('.bar').on('click',(event) =>
         {
-            if (this.isCurrentTrack()) {
-                let wight_px :number = event.pageX;
-
-                this.audio.currentTime = (this.getWightRulerPctPlayerFromWightPx(wight_px) * this.audio.duration) / 100;
-            }
-        })
+            let wight_px :number = event.pageX;
+            this.currentTime = (this.getWightRulerPctPlayerFromWightPx(wight_px) * this.duration) / 100;
+        });
     }
 
-    private removePlaying()
+    private initFirstSong()
     {
-        this.$context.siblings().removeClass('playing');
+        if (!this.audio.src) {
+            let mini_players : MiniPlayers[] =  MiniPlayers.create();
+            this.audio.src = mini_players[0].src;
+            this.makeDisabled(this.$previous, true);
+        }
     }
 
-    private isCurrentTrack() :boolean
-    {
-        let src_audio  = decodeURI(this.audio.src).toLowerCase();
-        let src_player = decodeURI(this.src).toLowerCase();
-
-        return src_audio.includes(src_player);
-    }
-
-    private updateAction()
+    public updateAction()
     {
         this.playing
             ? this.pause()
@@ -61,21 +74,78 @@ class Player
     {
         this.audio.onplay = () => {
             this.playing = this.playing;
+            this.$context.trigger(Player.EVENT_UPDATE_ACTION)
         };
 
         this.audio.onpause = () => {
             this.playing = this.playing;
+            this.$context.trigger(Player.EVENT_UPDATE_ACTION)
         };
 
         this.audio.ontimeupdate = () => {
             this.wightRulerPct = this.getWightRulerPctAudio();
-            this.currentTimeText = this.audio.currentTime
+            this.currentTimeText = this.currentTime
+        };
+
+        this.audio.onended = () => {
+            this.playNextSong();
         };
 
         this.audio.onloadedmetadata = () => {
+            this.$context.removeClass('playing');
             this.updateAction();
-            this.durationText = this.audio.duration;
+            this.durationText = this.duration;
         }
+    }
+
+    private playNextSong()
+    {
+        let mini_players : MiniPlayers[] =  MiniPlayers.create();
+
+        let current_index :number = this.getIndexSong() + 1;
+
+        this.audio.src = mini_players[current_index].src;
+
+        let last_index: number = mini_players.length-1 ;
+
+        if (current_index < last_index) {
+            this.makeDisabled(this.$previous, false);
+
+        } else  {
+            this.makeDisabled(this.$next, true);
+        }
+    }
+
+    private playPreviousSong()
+    {
+        let mini_players : MiniPlayers[] =  MiniPlayers.create();
+
+        let current_index :number = this.getIndexSong() - 1;
+
+        this.audio.src = mini_players[current_index].src;
+
+        if (current_index > 0) {
+            this.makeDisabled(this.$next, false);
+
+        } else {
+            this.makeDisabled(this.$previous, true);
+        }
+    }
+
+    private getIndexSong():number
+    {
+        let mini_players : MiniPlayers[] =  MiniPlayers.create();
+        let index_active_song :number;
+
+        mini_players.forEach((mini_player, index) =>
+        {
+            if (decodeURI(mini_player.src) == decodeURI(this.audio.src.split('/').pop())) {
+                index_active_song = index;
+                return;
+            }
+        })
+
+        return index_active_song;
     }
 
     private getWightRulerPctPlayerFromWightPx(wight_px :number): number
@@ -87,7 +157,7 @@ class Player
 
     private getWightRulerPctAudio() : number
     {
-        return (this.audio.currentTime * 100) /this.audio.duration;
+        return (this.currentTime * 100) /this.duration;
     }
 
     private get wightSliderPx() :number
@@ -97,7 +167,7 @@ class Player
 
     private set wightRulerPct(wight: number)
     {
-        this.$context.find('.ruler').width(wight + '%')
+        this.$context.find('.ruler').width(wight + '%');
     }
 
     public pause()
@@ -110,36 +180,45 @@ class Player
         this.audio.play();
     }
 
-    public set src(src: string)
-    {
-        this.$context.data('src', src);
-    }
-
-    public get src() :string
-    {
-        return this.$context.data('src');
-    }
-
     private set currentTimeText(current_time: number)
     {
-        this.$context.find('.current_time').text(Player.convertSecToMin(current_time));
+        this.$context.find('.current_time').text(Player.formatTime(current_time));
     }
 
     private set durationText(duration :number)
     {
-         this.$context.find('.duration').text('/ ' + Player.convertSecToMin(duration));
+         this.$context.find('.duration').text(Player.formatTime(duration));
     }
 
-    // todo добавить метод get
+    public set src(src: string)
+    {
+        this.audio.src = src;
+    }
+
+    public get src() :string
+    {
+        return  this.audio.src;
+    }
+
+    // todo добавить метод get ok
     public set currentTime(current_time: number)
     {
         this.audio.currentTime = current_time;
     }
 
-    // todo добавить метод get duration
+    public get currentTime(): number
+    {
+        return this.audio.currentTime;
+    }
 
-    // fixme переименуй в formatTime
-    private static convertSecToMin(sec = 0)
+    // todo добавить метод get duration ok
+    public get duration(): number
+    {
+        return this.audio.duration;
+    }
+
+    // fixme переименуй в formatTime ok
+    private static formatTime(sec = 0)
     {
         let min = Math.floor(Math.trunc(sec / 60));
 
@@ -152,12 +231,12 @@ class Player
         }
     }
 
-
     private set playing(playing)
     {
         playing
             ? this.$context.removeClass('playing')
-            : this.$context.addClass('playing');
+            : this.$context.addClass('playing slash');
+
     }
 
     private get playing() :boolean
@@ -165,16 +244,13 @@ class Player
         return this.$context.hasClass('playing');
     }
 
-    public static create($context = $('.b_player')): Player[]
+    private makeDisabled (button, is_disabled : boolean)
     {
-        let $players = $context;
-        let players: Player[] = [];
+        button.attr('disabled', is_disabled);
+    }
 
-        $players.each((index, element) => {
-            let player = $(element);
-            players.push(new Player(player));
-        })
-
-        return players;
+    public static create($context = $('.b_player')): Player
+    {
+        return new Player($context);
     }
 }
