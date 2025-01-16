@@ -13,10 +13,11 @@
 </head>
 <body>
     <div>
-        <audio id="audio_player" type="audio/mp3" controls="controls"  preload="metadata" >
-        </audio>
+        <audio id="audio_player" type="audio/mp3" controls="controls"  preload="metadata" ></audio>
     </div>
 
+    <!-- fixme по умолчанию когда в плеер ни загружена песня все кнопки должны быть заблокированы как у настоящего плеера -->
+    <!--  чтобы не возможно было на них нажать-->
     <div class="b_player">
         <div>
             <button class="previous icon"></button>
@@ -28,11 +29,8 @@
             <button class="next icon"></button>
         </div>
 
-        <!-- todo ты не исправила проблему с прыганьем блоков во время загрузки, все размеры должны быть фиксированные
-              чтобы избежать прыганья когда блоки еще пустые ok-->
         <div class="time">
             <div class="current_time"></div>
-            <!-- fixme ты физически добавила / сюда, так нельзя / не является длинной, я просил добавить через css :afterr или :before ok -->
             <div class="duration"></div>
         </div>
 
@@ -42,28 +40,32 @@
         </div>
     </div>
 
-   <ul class="b_list_mini_players">
-       <li>
-           <button class="b_mini_player play go pause icon" data-src='5УТРА%20-%20Ромашки.mp3'></button>
-           <span class="name_song">5УТРА - Ромашки</span>
-       </li>
-       <li>
-           <button class="b_mini_player play go pause icon" data-src='Niletto - Счастливым.mp3'></button>
-           <span class="name_song">Niletto - Счастливым</span>
-       </li>
-       <li>
-           <button class="b_mini_player play go pause icon" data-src='А-Студио - Так же как все.mp3'></button>
-           <span class="name_song">А-Студио - Так же как все</span>
-       </li>
-   </ul>
+    <ul class="b_list_mini_players">
+        <li>
+            <!-- todo перенеси mp3 файлы в папку mp3s -->
+            <!-- fixme замени button на тег a (ссылка) -->
+            <!-- fixme замени data-src на атрибут href -->
+            <!-- fixme бардак с классами тут достаточно двух классов b_mini_player и еще одного означающего текущие состояние убрать лишнее -->
+            <button class="b_mini_player play go pause icon" data-src='5УТРА%20-%20Ромашки.mp3'></button>
+            <span class="name_song">5УТРА - Ромашки</span>
+        </li>
+        <li>
+            <button class="b_mini_player play go pause icon" data-src='Niletto - Счастливым.mp3'></button>
+            <span class="name_song">Niletto - Счастливым</span>
+        </li>
+        <li>
+            <button class="b_mini_player play go pause icon" data-src='А-Студио - Так же как все.mp3'></button>
+            <span class="name_song">А-Студио - Так же как все</span>
+        </li>
+    </ul>
 
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="MiniPlayers.js"></script>
-<script src="Player.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="MiniPlayers.js"></script>
+    <script src="Player.js"></script>
     <script type="text/javascript">
         $(function() {
             let players = Player.create();
