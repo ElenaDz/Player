@@ -7,10 +7,9 @@ class Player {
             return;
         // @ts-ignore
         this.$context[0].Player = this;
+        this.mini_players = MiniPlayers.create();
         this.$next = this.$context.find('.next');
         this.$previous = this.$context.find('.previous');
-        // Метод нужен , чтобы после загрузки страницы можно было сразу воспользовать плеером, не выбирая сам песню
-        this.initFirstSong();
         this.bindEventsAction();
     }
     bindEventsAction() {
@@ -28,13 +27,6 @@ class Player {
             let wight_px = event.pageX;
             this.currentTime = (this.getWightRulerPctPlayerFromWightPx(wight_px) * this.duration) / 100;
         });
-    }
-    initFirstSong() {
-        if (!this.audio.src) {
-            let mini_players = MiniPlayers.create();
-            this.audio.src = mini_players[0].src;
-            this.makeDisabled(this.$previous, true);
-        }
     }
     updateAction() {
         this.playing
@@ -58,38 +50,38 @@ class Player {
             this.playNextSong();
         };
         this.audio.onloadedmetadata = () => {
+            this.changeDisabled();
             this.$context.removeClass('playing');
             this.updateAction();
             this.durationText = this.duration;
         };
     }
-    playNextSong() {
-        let mini_players = MiniPlayers.create();
-        let current_index = this.getIndexSong() + 1;
-        this.audio.src = mini_players[current_index].src;
-        let last_index = mini_players.length - 1;
-        if (current_index < last_index) {
+    changeDisabled() {
+        let last_index = this.mini_players.length - 1;
+        if (this.getIndexSong() == 0) {
+            this.makeDisabled(this.$previous, true);
+            this.makeDisabled(this.$next, false);
+        }
+        else if (this.getIndexSong() == last_index) {
+            this.makeDisabled(this.$next, true);
             this.makeDisabled(this.$previous, false);
         }
         else {
-            this.makeDisabled(this.$next, true);
-        }
-    }
-    playPreviousSong() {
-        let mini_players = MiniPlayers.create();
-        let current_index = this.getIndexSong() - 1;
-        this.audio.src = mini_players[current_index].src;
-        if (current_index > 0) {
+            this.makeDisabled(this.$previous, false);
             this.makeDisabled(this.$next, false);
         }
-        else {
-            this.makeDisabled(this.$previous, true);
-        }
+    }
+    playNextSong() {
+        let current_index = this.getIndexSong() + 1;
+        this.audio.src = this.mini_players[current_index].src;
+    }
+    playPreviousSong() {
+        let current_index = this.getIndexSong() - 1;
+        this.audio.src = this.mini_players[current_index].src;
     }
     getIndexSong() {
-        let mini_players = MiniPlayers.create();
         let index_active_song;
-        mini_players.forEach((mini_player, index) => {
+        this.mini_players.forEach((mini_player, index) => {
             if (decodeURI(mini_player.src) == decodeURI(this.audio.src.split('/').pop())) {
                 index_active_song = index;
                 return;

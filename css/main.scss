@@ -121,7 +121,7 @@ body {
   padding: unset;
   list-style-type:  none;
 
-  .b_mini_player {
+  li {
     width: 350px;
     height: 54px;
     margin-top: 20px;
@@ -135,5 +135,8 @@ body {
     .play {
       margin-left: 30px;
     }
+  }
+  .playing {
+    background-image: url("/icon/pause.png") !important;
   }
 }

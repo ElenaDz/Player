@@ -107,7 +107,7 @@ body {
   padding: unset;
   list-style-type: none;
 }
-.b_list_mini_players .b_mini_player {
+.b_list_mini_players li {
   width: 350px;
   height: 54px;
   margin-top: 20px;
@@ -118,8 +118,11 @@ body {
   justify-content: start;
   padding: unset;
 }
-.b_list_mini_players .b_mini_player .play {
+.b_list_mini_players li .play {
   margin-left: 30px;
+}
+.b_list_mini_players .playing {
+  background-image: url("/icon/pause.png") !important;
 }
 
 /*# sourceMappingURL=main.css.map */

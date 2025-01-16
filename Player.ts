@@ -4,6 +4,7 @@ class Player
 
     public $context: JQuery;
     private audio: HTMLAudioElement;
+    private mini_players: MiniPlayers[];
     private $next: JQuery;
     private $previous: JQuery;
 
@@ -19,11 +20,10 @@ class Player
         // @ts-ignore
         this.$context[0].Player = this;
 
+        this.mini_players  =  MiniPlayers.create();
+
         this.$next = this.$context.find('.next');
         this.$previous = this.$context.find('.previous');
-
-        // Метод нужен , чтобы после загрузки страницы можно было сразу воспользовать плеером, не выбирая сам песню
-        this.initFirstSong();
 
         this.bindEventsAction();
     }
@@ -54,14 +54,6 @@ class Player
         });
     }
 
-    private initFirstSong()
-    {
-        if (!this.audio.src) {
-            let mini_players : MiniPlayers[] =  MiniPlayers.create();
-            this.audio.src = mini_players[0].src;
-            this.makeDisabled(this.$previous, true);
-        }
-    }
 
     public updateAction()
     {
@@ -92,52 +84,50 @@ class Player
         };
 
         this.audio.onloadedmetadata = () => {
+            this.changeDisabled();
             this.$context.removeClass('playing');
             this.updateAction();
             this.durationText = this.duration;
         }
     }
 
-    private playNextSong()
+    private changeDisabled()
     {
-        let mini_players : MiniPlayers[] =  MiniPlayers.create();
+        let last_index: number = this.mini_players.length-1 ;
 
-        let current_index :number = this.getIndexSong() + 1;
+        if (this.getIndexSong() == 0) {
+            this.makeDisabled(this.$previous, true);
+            this.makeDisabled(this.$next, false);
 
-        this.audio.src = mini_players[current_index].src;
-
-        let last_index: number = mini_players.length-1 ;
-
-        if (current_index < last_index) {
+        } else if (this.getIndexSong() == last_index) {
+            this.makeDisabled(this.$next, true);
             this.makeDisabled(this.$previous, false);
 
-        } else  {
-            this.makeDisabled(this.$next, true);
+        } else {
+            this.makeDisabled(this.$previous, false);
+            this.makeDisabled(this.$next, false);
         }
+    }
+
+    private playNextSong()
+    {
+        let current_index :number = this.getIndexSong() + 1;
+
+        this.audio.src = this.mini_players[current_index].src;
     }
 
     private playPreviousSong()
     {
-        let mini_players : MiniPlayers[] =  MiniPlayers.create();
-
         let current_index :number = this.getIndexSong() - 1;
 
-        this.audio.src = mini_players[current_index].src;
-
-        if (current_index > 0) {
-            this.makeDisabled(this.$next, false);
-
-        } else {
-            this.makeDisabled(this.$previous, true);
-        }
+        this.audio.src = this.mini_players[current_index].src;
     }
 
     private getIndexSong():number
     {
-        let mini_players : MiniPlayers[] =  MiniPlayers.create();
         let index_active_song :number;
 
-        mini_players.forEach((mini_player, index) =>
+        this.mini_players.forEach((mini_player, index) =>
         {
             if (decodeURI(mini_player.src) == decodeURI(this.audio.src.split('/').pop())) {
                 index_active_song = index;

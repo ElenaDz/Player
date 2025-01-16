@@ -17,17 +17,17 @@ class MiniPlayers
 
         this.player = Player.create();
 
-        this.$context.find('.play').on('click',() =>
+        this.$context.on('click',() =>
         {
             this.turnOffMiniPlayers();
         })
 
         this.player.$context.on(Player.EVENT_UPDATE_ACTION, () =>
         {
-            this.playing = true;
-
             if (decodeURI(this.src) == decodeURI(this.player.src.split('/').pop())) {
                 this.playing = this.playing;
+            } else {
+                this.playing = true;
             }
         })
     }
@@ -73,6 +73,7 @@ class MiniPlayers
 
     public static create($context = $('.b_mini_player')): MiniPlayers[]
     {
+
         let $mini_players: JQuery  = $context;
         let mini_players: MiniPlayers[] = [];
 
