@@ -190,7 +190,6 @@ class Player
         return  this.audio.src;
     }
 
-    // todo добавить метод get ok
     public set currentTime(current_time: number)
     {
         this.audio.currentTime = current_time;
@@ -201,13 +200,11 @@ class Player
         return this.audio.currentTime;
     }
 
-    // todo добавить метод get duration ok
     public get duration(): number
     {
         return this.audio.duration;
     }
 
-    // fixme переименуй в formatTime ok
     private static formatTime(sec = 0)
     {
         let min = Math.floor(Math.trunc(sec / 60));

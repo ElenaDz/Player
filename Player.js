@@ -120,18 +120,15 @@ class Player {
     get src() {
         return this.audio.src;
     }
-    // todo добавить метод get ok
     set currentTime(current_time) {
         this.audio.currentTime = current_time;
     }
     get currentTime() {
         return this.audio.currentTime;
     }
-    // todo добавить метод get duration ok
     get duration() {
         return this.audio.duration;
     }
-    // fixme переименуй в formatTime ok
     static formatTime(sec = 0) {
         let min = Math.floor(Math.trunc(sec / 60));
         sec = Math.floor(sec % 60);
