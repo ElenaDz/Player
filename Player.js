@@ -2,36 +2,35 @@ class Player {
     constructor($context) {
         this.$context = $context;
         this.audio = $('body').find('audio')[0];
+        this.$next = this.$context.find('.next');
+        this.$previous = this.$context.find('.previous');
         // @ts-ignore
         if (this.$context[0].Player)
             return;
         // @ts-ignore
         this.$context[0].Player = this;
-        this.mini_players = MiniPlayers.create();
-        this.$next = this.$context.find('.next');
-        this.$previous = this.$context.find('.previous');
+        this.makeAllDisabled();
+        this.list_mini_players = ListMiniPlayers.create();
         this.bindEventsAction();
     }
     bindEventsAction() {
+        this.initEventsAudio();
+        this.$context.find('.play').on('click', () => {
+            this.updateAction();
+        });
         this.$next.on('click', () => {
             this.playNextSong();
         });
         this.$previous.on('click', () => {
             this.playPreviousSong();
         });
-        this.initEventsAudio();
-        this.$context.find('.play').on('click', () => {
-            this.updateAction();
-        });
         this.$context.find('.bar').on('click', (event) => {
             let wight_px = event.pageX;
             this.currentTime = (this.getWightRulerPctPlayerFromWightPx(wight_px) * this.duration) / 100;
         });
-    }
-    updateAction() {
-        this.playing
-            ? this.pause()
-            : this.play();
+        this.$context.on(Player.EVENT_CHANGE_SONG, () => {
+            this.playNextSong();
+        });
     }
     initEventsAudio() {
         this.audio.onplay = () => {
@@ -47,47 +46,100 @@ class Player {
             this.currentTimeText = this.currentTime;
         };
         this.audio.onended = () => {
-            this.playNextSong();
+            this.$context.trigger(Player.EVENT_CHANGE_SONG);
         };
         this.audio.onloadedmetadata = () => {
-            this.changeDisabled();
+            this.makeDisabled(this.$context.find('.play'), false);
             this.$context.removeClass('playing');
             this.updateAction();
             this.durationText = this.duration;
+            this.makeDisabledNextPrevious();
         };
     }
-    changeDisabled() {
-        let last_index = this.mini_players.length - 1;
-        if (this.getIndexSong() == 0) {
+    makeDisabledNextPrevious() {
+        if (this.getLastIndex()) {
+            if (this.getIndexSong() == 0) {
+                this.makeDisabled(this.$previous, true);
+                this.makeDisabled(this.$next, false);
+            }
+            else if (this.getIndexSong() == this.getLastIndex()) {
+                this.makeDisabled(this.$next, true);
+                this.makeDisabled(this.$previous, false);
+            }
+            else {
+                this.makeDisabled(this.$previous, false);
+                this.makeDisabled(this.$next, false);
+            }
+        }
+        else if (!this.getLastIndex()) {
             this.makeDisabled(this.$previous, true);
-            this.makeDisabled(this.$next, false);
-        }
-        else if (this.getIndexSong() == last_index) {
             this.makeDisabled(this.$next, true);
-            this.makeDisabled(this.$previous, false);
-        }
-        else {
-            this.makeDisabled(this.$previous, false);
-            this.makeDisabled(this.$next, false);
         }
     }
-    playNextSong() {
-        let current_index = this.getIndexSong() + 1;
-        this.audio.src = this.mini_players[current_index].src;
-    }
-    playPreviousSong() {
-        let current_index = this.getIndexSong() - 1;
-        this.audio.src = this.mini_players[current_index].src;
+    getLastIndex() {
+        let last_index;
+        this.list_mini_players.forEach((list_mini_players) => {
+            list_mini_players.checkListByMiniPlayerId(this.miniPlayerId);
+            if (list_mini_players.is_active) {
+                last_index = list_mini_players.mini_players.length - 1;
+            }
+        });
+        return last_index;
     }
     getIndexSong() {
         let index_active_song;
-        this.mini_players.forEach((mini_player, index) => {
-            if (decodeURI(mini_player.src) == decodeURI(this.audio.src.split('/').pop())) {
-                index_active_song = index;
-                return;
+        this.list_mini_players.forEach((list_mini_players) => {
+            if (list_mini_players.is_active) {
+                list_mini_players.mini_players.forEach((mini_player, index) => {
+                    if (this.is_not_change_src(mini_player)) {
+                        index_active_song = index;
+                        return;
+                    }
+                });
             }
         });
         return index_active_song;
+    }
+    is_not_change_src(mini_player) {
+        return decodeURI(mini_player.src.split('/').pop()) == decodeURI(this.src.split('/').pop());
+    }
+    playNextSong() {
+        let current_index = this.getIndexSong() + 1;
+        this.list_mini_players.forEach((list) => {
+            if (list.is_active) {
+                if (current_index < list.mini_players.length) {
+                    this.src = list.mini_players[current_index].src;
+                    this.miniPlayerId = list.mini_players[current_index].id;
+                }
+            }
+        });
+    }
+    playPreviousSong() {
+        let current_index = this.getIndexSong() - 1;
+        this.list_mini_players.forEach((list) => {
+            if (list.is_active) {
+                if (current_index >= 0) {
+                    this.src = list.mini_players[current_index].src;
+                    this.miniPlayerId = list.mini_players[current_index].id;
+                }
+            }
+        });
+    }
+    updateAction() {
+        this.playing
+            ? this.pause()
+            : this.play();
+    }
+    set miniPlayerId(id) {
+        this.$context.data('mini_player_id', id);
+    }
+    get miniPlayerId() {
+        return this.$context.data('mini_player_id');
+    }
+    makeAllDisabled() {
+        this.makeDisabled(this.$previous, true);
+        this.makeDisabled(this.$next, true);
+        this.makeDisabled(this.$context.find('.play'), true);
     }
     getWightRulerPctPlayerFromWightPx(wight_px) {
         let wight_ruler_px = (wight_px - this.$context.find('.slider').offset().left);
@@ -155,3 +207,4 @@ class Player {
     }
 }
 Player.EVENT_UPDATE_ACTION = 'Player.EVENT_UPDATE_ACTION';
+Player.EVENT_CHANGE_SONG = 'Player.EVENT_CHANGE_SONG';

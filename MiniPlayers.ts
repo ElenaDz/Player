@@ -1,8 +1,9 @@
 class MiniPlayers
 {
     static readonly EVENT_UPDATE_PLAYING = 'MiniPlayers.EVENT_UPDATE_PLAYING';
+    static readonly EVENT_CLICK = 'MiniPlayers.EVENT_CLICK';
 
-    public $context: JQuery;
+    private $context: JQuery;
     private player: Player;
 
     constructor($context: JQuery)
@@ -17,32 +18,39 @@ class MiniPlayers
 
         this.player = Player.create();
 
+        this.bindEvents();
+    }
+
+    private bindEvents()
+    {
         this.$context.on('click',() =>
         {
             this.turnOffMiniPlayers();
+
+            return false;
         })
 
-        this.player.$context.on(Player.EVENT_UPDATE_ACTION, () =>
+        this.player.$context.on(Player.EVENT_UPDATE_ACTION,() =>
         {
-            if (decodeURI(this.src) == decodeURI(this.player.src.split('/').pop())) {
+            if (this.player.miniPlayerId == this.id) {
                 this.playing = this.playing;
+
             } else {
                 this.playing = true;
             }
         })
     }
 
+    public get id(): number
+    {
+        return this.$context.data('mini_player_id');
+    }
+
     private turnOffMiniPlayers()
     {
         if ( ! this.playing) {
-            let mini_players : MiniPlayers[] = MiniPlayers.create();
-
-            mini_players.forEach((mini_player : MiniPlayers) =>
-            {
-                mini_player.playing = true;
-            })
-
             this.player.src = this.src;
+            this.player.miniPlayerId = this.id;
 
         } else {
             this.player.updateAction();
@@ -51,29 +59,28 @@ class MiniPlayers
 
     public set src(src: string)
     {
-        this.$context.data('src', src);
+        this.$context.attr('href', src);
     }
 
-    public get src() :string
+    public get src(): string
     {
-        return this.$context.data('src');
+        return this.$context.attr('href');
     }
 
-    private set playing(playing)
+    public set playing(playing: boolean)
     {
         playing
             ? this.$context.removeClass('playing')
             : this.$context.addClass('playing');
     }
 
-    private get playing() :boolean
+    public get playing(): boolean
     {
         return this.$context.hasClass('playing');
     }
 
     public static create($context = $('.b_mini_player')): MiniPlayers[]
     {
-
         let $mini_players: JQuery  = $context;
         let mini_players: MiniPlayers[] = [];
 

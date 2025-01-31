@@ -20,13 +20,13 @@
     <!--  чтобы не возможно было на них нажать-->
     <div class="b_player">
         <div>
-            <button class="previous icon"></button>
+            <button class="previous"></button>
         </div>
         <div>
-            <button class="play go pause icon"></button>
+            <button class="play icon" ></button>
         </div>
         <div>
-            <button class="next icon"></button>
+            <button class="next"></button>
         </div>
 
         <div class="time">
@@ -41,37 +41,57 @@
     </div>
 
 
-    <!-- todo создай второй список в котором одна из песен будет из этого списка -->
+    <!-- todo создай второй список в котором одна из песен будет из этого списка ok -->
     <ul class="b_list_mini_players">
         <li>
-            <!-- todo перенеси mp3 файлы в папку mp3s -->
-            <!-- fixme замени button на тег a (ссылка) -->
-            <!-- fixme замени data-src на атрибут href -->
+            <!-- todo перенеси mp3 файлы в папку mp3s ok -->
+            <!-- fixme замени button на тег a (ссылка) ok -->
+            <!-- fixme замени data-src на атрибут href ok -->
             <!-- fixme бардак с классами тут достаточно двух классов b_mini_player и еще одного означающего текущие состояние убрать лишнее -->
-            <button class="b_mini_player play go pause icon" data-src='5УТРА%20-%20Ромашки.mp3'></button>
+            <a class="b_mini_player icon" data-mini_player_id="1" href='mp3s/5УТРА%20-%20Ромашки.mp3'></a>
             <span class="name_song">5УТРА - Ромашки</span>
         </li>
         <li>
-            <button class="b_mini_player play go pause icon" data-src='Niletto - Счастливым.mp3'></button>
+            <a class="b_mini_player icon" data-mini_player_id="2" href='mp3s/Niletto - Счастливым.mp3'></a>
             <span class="name_song">Niletto - Счастливым</span>
         </li>
         <li>
-            <button class="b_mini_player play go pause icon" data-src='А-Студио - Так же как все.mp3'></button>
+            <a class="b_mini_player icon" data-mini_player_id="3" href='mp3s/А-Студио - Так же как все.mp3'></a>
             <span class="name_song">А-Студио - Так же как все</span>
         </li>
     </ul>
 
-    <!-- todo создай один мини плеер за пределами списка мини плееров чтобы протестировать его работу отдельно -->
+    <div style="width:350px; height:2px; background-color:black"></div>
 
+    <ul class="b_list_mini_players">
+        <li>
+            <a class="b_mini_player icon" data-mini_player_id="4" href='mp3s/5УТРА%20-%20Ромашки.mp3'></a>
+            <span class="name_song">5УТРА - Ромашки</span>
+        </li>
+        <li>
+            <a class="b_mini_player icon" data-mini_player_id="5" href='mp3s/Градусы - Кто ты.mp3'></a>
+            <span class="name_song">Градусы - Кто ты</span>
+        </li>
+    </ul>
+
+    <div style="width:350px; height:2px; background-color:black"></div>
+    <!-- todo создай один мини плеер за пределами списка мини плееров чтобы протестировать его работу отдельно ok-->
+    <div class="test">
+        <a class="b_mini_player icon" data-mini_player_id="6" href='mp3s/5УТРА%20-%20Ромашки.mp3'></a>
+        <span class="name_song">5УТРА - Ромашки</span>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
             integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="MiniPlayers.js"></script>
+    <script src="ListMiniPlayers.js"></script>
     <script src="Player.js"></script>
     <script type="text/javascript">
         $(function() {
-            let players = Player.create();
             let mini_players = MiniPlayers.create();
+            let players = Player.create();
+
+            // let list_mini_players = ListMiniPlayers.create();
 
         });
     </script>

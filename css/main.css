@@ -3,22 +3,23 @@ body {
   font-size: 15px;
 }
 
+a {
+  text-decoration: none;
+}
+
 .icon {
   background-size: 15px;
   background-repeat: no-repeat;
   background-position: center;
+  background-image: url("/icon/play.png");
 }
 
-.playing .pause {
+.playing .play {
   background-image: url("/icon/pause.png") !important;
 }
 
-.pause {
-  background-image: url("/icon/pause.png");
-}
-
-.go {
-  background-image: url("/icon/play.png");
+.playing.icon {
+  background-image: url("/icon/pause.png") !important;
 }
 
 .slash .current_time::after {
@@ -26,7 +27,7 @@ body {
   content: "/";
 }
 
-.play {
+.b_mini_player, .play {
   width: 30px;
   height: 30px;
   border: none;
@@ -34,7 +35,7 @@ body {
   cursor: pointer;
   margin: 0 10px;
 }
-.play:hover, .play:focus {
+.b_mini_player:hover, .b_mini_player:focus, .play:hover, .play:focus {
   background-color: #bfc1c3;
 }
 
@@ -55,6 +56,9 @@ body {
   border-radius: 50%;
   cursor: pointer;
   background-image: url("/icon/next.png");
+  background-size: 15px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .b_player .previous:hover, .b_player .next:hover {
   background-color: #bfc1c3;
@@ -66,6 +70,11 @@ body {
 }
 .b_player .previous {
   transform: scale(-1, 1);
+}
+.b_player .play:disabled {
+  opacity: 0.5;
+  cursor: default;
+  background-color: white;
 }
 .b_player .time {
   display: flex;
@@ -107,6 +116,9 @@ body {
   padding: unset;
   list-style-type: none;
 }
+.b_list_mini_players .playing {
+  background-image: url("/icon/pause.png") !important;
+}
 .b_list_mini_players li {
   width: 350px;
   height: 54px;
@@ -118,11 +130,23 @@ body {
   justify-content: start;
   padding: unset;
 }
-.b_list_mini_players li .play {
+.b_list_mini_players li .b_mini_player {
   margin-left: 30px;
 }
 .b_list_mini_players .playing {
   background-image: url("/icon/pause.png") !important;
+}
+
+.test {
+  width: 350px;
+  height: 54px;
+  margin-top: 20px;
+  border: 1px solid #bfc1c3;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: unset;
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -7,11 +7,15 @@ class MiniPlayers {
         // @ts-ignore
         this.$context[0].MiniPlayers = this;
         this.player = Player.create();
+        this.bindEvents();
+    }
+    bindEvents() {
         this.$context.on('click', () => {
             this.turnOffMiniPlayers();
+            return false;
         });
         this.player.$context.on(Player.EVENT_UPDATE_ACTION, () => {
-            if (decodeURI(this.src) == decodeURI(this.player.src.split('/').pop())) {
+            if (this.player.miniPlayerId == this.id) {
                 this.playing = this.playing;
             }
             else {
@@ -19,23 +23,23 @@ class MiniPlayers {
             }
         });
     }
+    get id() {
+        return this.$context.data('mini_player_id');
+    }
     turnOffMiniPlayers() {
         if (!this.playing) {
-            let mini_players = MiniPlayers.create();
-            mini_players.forEach((mini_player) => {
-                mini_player.playing = true;
-            });
             this.player.src = this.src;
+            this.player.miniPlayerId = this.id;
         }
         else {
             this.player.updateAction();
         }
     }
     set src(src) {
-        this.$context.data('src', src);
+        this.$context.attr('href', src);
     }
     get src() {
-        return this.$context.data('src');
+        return this.$context.attr('href');
     }
     set playing(playing) {
         playing
@@ -56,3 +60,4 @@ class MiniPlayers {
     }
 }
 MiniPlayers.EVENT_UPDATE_PLAYING = 'MiniPlayers.EVENT_UPDATE_PLAYING';
+MiniPlayers.EVENT_CLICK = 'MiniPlayers.EVENT_CLICK';

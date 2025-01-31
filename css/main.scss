@@ -2,26 +2,33 @@ body {
   font-family: "Roboto", sans-serif;
   font-size: 15px;
 }
+a {
+  text-decoration: none;
+}
 
 .icon {
   background-size: 15px;
   background-repeat: no-repeat;
   background-position: center;
+  background-image: url("/icon/play.png");
 }
 
 .playing {
-  .pause {
+  .play {
     background-image: url("/icon/pause.png") !important;
   }
 }
-
-.pause {
-  background-image: url("/icon/pause.png");
+.playing.icon {
+  background-image: url("/icon/pause.png") !important;
 }
-
-.go {
-  background-image: url("/icon/play.png");
-}
+//
+//.pause {
+//  background-image: url("/icon/pause.png");
+//}
+//
+//.go {
+//  background-image: url("/icon/play.png");
+//}
 
 .slash {
   .current_time::after {
@@ -29,7 +36,7 @@ body {
     content: "/";
   }
 }
-.play {
+.b_mini_player, .play {
   width: 30px;
   height: 30px;
   border: none;
@@ -41,6 +48,7 @@ body {
     background-color: #bfc1c3;
   }
 }
+
 
 .b_player {
   width: 350px;
@@ -59,10 +67,14 @@ body {
     border-radius: 50%;
     cursor: pointer;
     background-image: url("/icon/next.png");
+    background-size: 15px;
+    background-repeat: no-repeat;
+    background-position: center;
 
     &:hover, {
       background-color: #bfc1c3;
     }
+
     &:disabled {
       opacity: 0.5;
       cursor: default;
@@ -72,6 +84,15 @@ body {
   .previous {
     transform: scale(-1, 1);
   }
+
+  .play {
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+      background-color: white;
+    }
+  }
+
 
   .time {
     display: flex;
@@ -121,6 +142,10 @@ body {
   padding: unset;
   list-style-type:  none;
 
+  .playing {
+    background-image: url("/icon/pause.png") !important;
+  }
+
   li {
     width: 350px;
     height: 54px;
@@ -132,11 +157,23 @@ body {
     justify-content: start;
     padding: unset;
 
-    .play {
+    .b_mini_player {
       margin-left: 30px;
     }
   }
   .playing {
     background-image: url("/icon/pause.png") !important;
   }
+}
+.test {
+  width: 350px;
+  height: 54px;
+  margin-top: 20px;
+  border: 1px solid #bfc1c3;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: unset;
+
 }
