@@ -258,7 +258,7 @@ class Player
 
     public get src(): string
     {
-        return  this.audio.src;
+        return this.audio.src;
     }
 
     public set currentTime(current_time: number)

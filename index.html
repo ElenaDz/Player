@@ -16,8 +16,6 @@
         <audio id="audio_player" type="audio/mp3" controls="controls"  preload="metadata" ></audio>
     </div>
 
-    <!-- fixme по умолчанию когда в плеер ни загружена песня все кнопки должны быть заблокированы как у настоящего плеера -->
-    <!--  чтобы не возможно было на них нажать-->
     <div class="b_player">
         <div>
             <button class="previous"></button>
@@ -41,13 +39,8 @@
     </div>
 
 
-    <!-- todo создай второй список в котором одна из песен будет из этого списка ok -->
     <ul class="b_list_mini_players">
         <li>
-            <!-- todo перенеси mp3 файлы в папку mp3s ok -->
-            <!-- fixme замени button на тег a (ссылка) ok -->
-            <!-- fixme замени data-src на атрибут href ok -->
-            <!-- fixme бардак с классами тут достаточно двух классов b_mini_player и еще одного означающего текущие состояние убрать лишнее -->
             <a class="b_mini_player icon" data-mini_player_id="1" href='mp3s/5УТРА%20-%20Ромашки.mp3'></a>
             <span class="name_song">5УТРА - Ромашки</span>
         </li>
@@ -75,11 +68,13 @@
     </ul>
 
     <div style="width:350px; height:2px; background-color:black"></div>
-    <!-- todo создай один мини плеер за пределами списка мини плееров чтобы протестировать его работу отдельно ok-->
+
+
     <div class="test">
         <a class="b_mini_player icon" data-mini_player_id="6" href='mp3s/5УТРА%20-%20Ромашки.mp3'></a>
         <span class="name_song">5УТРА - Ромашки</span>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
             integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -91,7 +86,6 @@
             let mini_players = MiniPlayers.create();
             let players = Player.create();
 
-            // let list_mini_players = ListMiniPlayers.create();
 
         });
     </script>
