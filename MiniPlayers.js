@@ -27,7 +27,7 @@ class MiniPlayers {
         return this.$context.data('mini_player_id');
     }
     turnOffMiniPlayers() {
-        if (!this.playing) {
+        if (!(this.player.miniPlayerId == this.id)) {
             this.player.src = this.src;
             this.player.miniPlayerId = this.id;
         }

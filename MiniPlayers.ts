@@ -48,7 +48,7 @@ class MiniPlayers
 
     private turnOffMiniPlayers()
     {
-        if ( ! this.playing) {
+        if ( !(this.player.miniPlayerId == this.id)){
             this.player.src = this.src;
             this.player.miniPlayerId = this.id;
 
